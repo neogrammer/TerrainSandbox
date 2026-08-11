@@ -250,6 +250,9 @@ bool BasicCamera::OnKeyboard(int Key)
 
 void BasicCamera::OnMouse(int x, int y)
 {
+	if (this == nullptr) {
+		return;
+	}
     int DeltaX = x - m_mousePos.x;
     int DeltaY = y - m_mousePos.y;
 

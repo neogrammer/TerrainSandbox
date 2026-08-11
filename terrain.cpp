@@ -25,7 +25,6 @@
 #include <string.h>
 
 #include "terrain.h"
-#include "texture_config.h"
 #include "3rdparty/stb_image_write.h"
 
 //#define DEBUG_PRINT
@@ -45,7 +44,6 @@ void BaseTerrain::Destroy()
 
 
 //void BaseTerrain::InitTerrain(float WorldScale, float TextureScale, const std::vector<string>& TextureFilenames)
-
 
 
 void BaseTerrain::Finalize()
@@ -149,6 +147,8 @@ void BaseTerrain::Render(const BasicCamera& Camera)
     m_terrainTech.SetLightDir(m_lightDir);
 
     m_geomipGrid.Render(Camera.GetPos(), VP);
+
+    m_pSkydome->Render(Camera);
 }
 
 

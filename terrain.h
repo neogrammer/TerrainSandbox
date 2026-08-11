@@ -23,8 +23,11 @@
 #include "ogldev_basic_glfw_camera.h"
 #include "ogldev_array_2d.h"
 #include "ogldev_texture.h"
+
 #include "geomip_grid.h"
 #include "terrain_technique.h"
+#include "ogldev_skydome.h"
+#include "texture_config.h"
 
 class BaseTerrain
 {
@@ -55,7 +58,11 @@ class BaseTerrain
             m_pTextures[i] = new Texture(GL_TEXTURE_2D);
             m_pTextures[i]->Load(TextureFilenames[i]);
         }
+
+
+        m_pSkydome = new Skydome(8, 32, 1.0f, "assets/textures/143_hdrmaps_com_free_10K.jpg", COLOR_TEXTURE_UNIT_0, COLOR_TEXTURE_UNIT_INDEX_0);
     }
+
 
     void Render(const BasicCamera& Camera);
 
@@ -109,6 +116,7 @@ private:
     TerrainTechnique m_terrainTech;
     Vector3f m_lightDir;
     float m_cameraHeight = 2.0f;
+    Skydome* m_pSkydome = NULL;
 };
 
 #endif

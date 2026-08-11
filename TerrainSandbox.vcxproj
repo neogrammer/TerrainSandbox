@@ -145,6 +145,14 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="Common\Shaders\skydome.fs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="Common\Shaders\skydome.vs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
     <None Include="single_tex_terrain.fs">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
@@ -206,6 +214,8 @@
     <ClCompile Include="Common\ogldev_glfw.cpp" />
     <ClCompile Include="Common\ogldev_glfw_backend.cpp" />
     <ClCompile Include="Common\ogldev_glm_camera.cpp" />
+    <ClCompile Include="Common\ogldev_skydome.cpp" />
+    <ClCompile Include="Common\ogldev_skydome_technique.cpp" />
     <ClCompile Include="Common\ogldev_stb_image.cpp" />
     <ClCompile Include="Common\ogldev_texture.cpp" />
     <ClCompile Include="Common\ogldev_tex_technique.cpp" />
@@ -224,10 +234,16 @@
     <ClCompile Include="triangle_list.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="assets\textures\143_hdrmaps_com_free_10K.jpg" />
+    <Image Include="assets\textures\brown_mud_leaves_01_diff_2k.jpg" />
+    <Image Include="assets\textures\coast_sand_rocks_02_diff_2k.jpg" />
+    <Image Include="assets\textures\evening_road_01_puresky_8k_2.jpg" />
     <Image Include="assets\textures\IMGP5487_seamless.jpg" />
     <Image Include="assets\textures\IMGP5525_seamless.jpg" />
+    <Image Include="assets\textures\kloofendal_48d_partly_cloudy_puresky_4k.jpg" />
     <Image Include="assets\textures\rock01.jpg" />
     <Image Include="assets\textures\rock02_2.jpg" />
+    <Image Include="assets\textures\rocky_trail_02_diff_1k.jpg" />
     <Image Include="assets\textures\tilable-IMG_0044-verydark.png" />
     <Image Include="assets\textures\water.png" />
   </ItemGroup>

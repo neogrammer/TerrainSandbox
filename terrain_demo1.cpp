@@ -171,8 +171,8 @@ public:
           m_pGameCamera->SetTarget(Target);
           m_pGameCamera->SetUp(0.0f, 1.0f, 0.0f);*/
 
-        float y = min(-0.4f, cosf(foo));
-        Vector3f LightDir(sinf(foo * 5.0f), y, cosf(foo * 5.0f));
+        //float y = min(-0.4f, cosf(foo));
+        //Vector3f LightDir(sinf(foo * 5.0f), y, cosf(foo * 5.0f));
 
         //  m_terrain.SetLightDir(LightDir);
 
@@ -257,7 +257,7 @@ public:
         bool CameraChangedPos = m_pGameCamera->OnKeyboard(key);
 
         // Track if camera is moving
-        if (state == GLFW_PRESS) {
+        if (state == GLFW_PRESS  || state == GLFW_REPEAT) {
             if (key == GLFW_KEY_W || key == GLFW_KEY_S ||
                 key == GLFW_KEY_A || key == GLFW_KEY_D) {
                 m_isMoving = true;
@@ -314,7 +314,7 @@ private:
         float CameraZ = CameraX;
         Vector3f Pos(CameraX, 0.0f, CameraZ);
         Pos = m_terrain.ConstrainCameraPosToTerrain(Pos);
-        Vector3f Target(0.0f, -0.25f, 1.0f);
+        Vector3f Target(0.0f, 0.f, 1.0f);
         Vector3f Up(0.0, 1.0f, 0.0f);
 
         float FOV = 45.0f;
@@ -323,18 +323,18 @@ private:
         PersProjInfo persProjInfo = { FOV, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, zNear, zFar };
 
         m_pGameCamera = new BasicCamera(persProjInfo, Pos, Target, Up);
-        m_pGameCamera->SetSpeed(0.5f);
+        m_pGameCamera->SetSpeed(0.05f);
     }
 
-
+              
     void InitTerrain()
     {
         float WorldScale = 4.0f;
         float TextureScale = 16.0f;
         std::vector<string> TextureFilenames;
-        TextureFilenames.push_back("assets/textures/IMGP5525_seamless.jpg");
-        TextureFilenames.push_back("assets/textures/IMGP5487_seamless.jpg");
-        TextureFilenames.push_back("assets/textures/tilable-IMG_0044-verydark.png");
+        TextureFilenames.push_back("assets/textures/rocky_trail_02_diff_1k.jpg");
+        TextureFilenames.push_back("assets/textures/coast_sand_rocks_02_diff_2k.jpg");
+        TextureFilenames.push_back("assets/textures/brown_mud_leaves_01_diff_2k.jpg");
         TextureFilenames.push_back("assets/textures/water.png");
 
         m_terrain.InitTerrain(WorldScale, TextureScale, TextureFilenames);

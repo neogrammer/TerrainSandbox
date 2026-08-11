@@ -57,6 +57,12 @@
     <None Include="terrainLOD.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="Common\Shaders\skydome.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Common\Shaders\skydome.vs">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="terrain_technique.h">
@@ -178,6 +184,12 @@
     <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_impl_opengl3.cpp">
       <Filter>3rdParty\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Common\ogldev_skydome.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_skydome_technique.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\textures\IMGP5487_seamless.jpg">
@@ -196,6 +208,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="assets\textures\rock02_2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\brown_mud_leaves_01_diff_2k.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\coast_sand_rocks_02_diff_2k.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\rocky_trail_02_diff_1k.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\kloofendal_48d_partly_cloudy_puresky_4k.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\143_hdrmaps_com_free_10K.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\evening_road_01_puresky_8k_2.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

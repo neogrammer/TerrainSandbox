@@ -28,11 +28,11 @@ bool SkydomeTechnique::Init()
         return false;
     }
 
-    if (!AddShader(GL_VERTEX_SHADER, "../Common/Shaders/skydome.vs")) {
+    if (!AddShader(GL_VERTEX_SHADER, "Common/Shaders/skydome.vs")) {
         return false;
     }
 
-    if (!AddShader(GL_FRAGMENT_SHADER, "../Common/Shaders/skydome.fs")) {
+    if (!AddShader(GL_FRAGMENT_SHADER, "Common/Shaders/skydome.fs")) {
         return false;
     }
 
