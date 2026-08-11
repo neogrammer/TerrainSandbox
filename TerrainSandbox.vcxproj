@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <SourcePath>C:\tools\OGL\Common;$(SourcePath)</SourcePath>
+    <SourcePath>$(ProjectDir)Common;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -194,29 +194,29 @@
     <ClInclude Include="triangle_list.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_draw.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_impl_glfw.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_tables.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_widgets.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\math_3d.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_basic_glfw_camera.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glfw.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glfw_backend.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glm_camera.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_stb_image.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_texture.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_tex_technique.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_util.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\random_texture.cpp" />
-    <ClCompile Include="..\..\tools\OGL\Common\technique.cpp" />
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui.cpp" />
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_draw.cpp" />
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_tables.cpp" />
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_widgets.cpp" />
+    <ClCompile Include="Common\3rdparty\stb_image.cpp" />
+    <ClCompile Include="Common\math_3d.cpp" />
+    <ClCompile Include="Common\ogldev_basic_glfw_camera.cpp" />
+    <ClCompile Include="Common\ogldev_glfw.cpp" />
+    <ClCompile Include="Common\ogldev_glfw_backend.cpp" />
+    <ClCompile Include="Common\ogldev_glm_camera.cpp" />
+    <ClCompile Include="Common\ogldev_stb_image.cpp" />
+    <ClCompile Include="Common\ogldev_texture.cpp" />
+    <ClCompile Include="Common\ogldev_tex_technique.cpp" />
+    <ClCompile Include="Common\ogldev_util.cpp" />
+    <ClCompile Include="Common\random_texture.cpp" />
+    <ClCompile Include="Common\technique.cpp" />
     <ClCompile Include="geomip_grid.cpp" />
     <ClCompile Include="lod_manager.cpp" />
     <ClCompile Include="midpoint_disp_terrain.cpp" />
     <ClCompile Include="single_tex_terrain_technique.cpp" />
     <ClCompile Include="slope_lighter.cpp" />
-    <ClCompile Include="stb_image.cpp" />
     <ClCompile Include="terrain.cpp" />
     <ClCompile Include="terrain_demo1.cpp" />
     <ClCompile Include="terrain_technique.cpp" />

@@ -1,0 +1,375 @@
+/*
+
+        Copyright 2011 Etay Meiri
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#include <iostream>
+#include <math.h>
+#include "ogldev_util.h"
+#include "ogldev_texture.h"
+#include "3rdparty/stb_image.h"
+#include "3rdparty/stb_image_write.h"
+
+
+static int GetNumMipMapLevels2D(int w, int h)
+{
+    int levels = 1;
+    while ((w | h) >> levels) {
+        levels += 1;
+    }
+    return levels;
+}
+
+
+Texture::Texture(GLenum TextureTarget, const std::string& FileName, GLTextureConfig* pConfig)
+{
+    m_textureTarget = TextureTarget;
+    m_fileName      = FileName;
+
+    if (pConfig) {
+        m_config = *pConfig;
+    }
+}
+
+
+Texture::Texture(GLenum TextureTarget, GLTextureConfig* pConfig)
+{
+    m_textureTarget = TextureTarget;
+
+    if (pConfig) {
+        m_config = *pConfig;
+    }
+}
+
+
+
+void Texture::Load(u32 BufferSize, const void* pData, bool IsSRGB)
+{
+    void* pImageData = stbi_load_from_memory((const stbi_uc*)pData, BufferSize, &m_imageWidth, &m_imageHeight, &m_imageBPP, 0);
+
+    LoadInternal(pImageData, IsSRGB);
+
+    stbi_image_free(pImageData);
+}
+
+
+void Texture::Load(int Width, int Height, int BPP, const void* pData)
+{
+    const void* pImageData = NULL;
+
+    m_imageWidth = Width;
+    m_imageHeight = Height;
+
+    if (m_config.m_numChannels == 1) {
+        if (m_config.m_isFloat) {
+            pImageData = pData;
+            m_imageBPP = 1;
+        } else {
+            NOT_IMPLEMENTED;
+        }
+    } else {
+        NOT_IMPLEMENTED;
+    }
+
+    LoadInternal(pImageData, false);
+}
+
+bool Texture::Load(bool IsSRGB)
+{
+    const char* pExt = strrchr(m_fileName.c_str(), '.');
+
+    m_isKTX = pExt && !strcmp(pExt, ".ktx");
+
+    void* pImageData = NULL;
+
+    gli::texture gliTex;
+    if (m_isKTX) {
+        gliTex = gli::load_ktx(m_fileName.c_str());
+        gli::gl GL(gli::gl::PROFILE_KTX);
+        m_ktxFormat = GL.translate(gliTex.format(), gliTex.swizzles());
+        glm::tvec3<GLsizei> extent(gliTex.extent(0));
+        m_imageWidth = extent.x;
+        m_imageHeight = extent.y;
+        m_imageBPP = extent.z;        
+        pImageData = gliTex.data();
+    } else {
+        stbi_set_flip_vertically_on_load(1);
+
+        if (m_config.m_numChannels == 1) {
+            if (m_config.m_isFloat) {
+                pImageData = stbi_loadf(m_fileName.c_str(), &m_imageWidth, &m_imageHeight, &m_imageBPP, 1);
+                // When you tell stbi_write_hdr to save data with 1 channel, STB fulfills the command by 
+                // duplicating your monochrome grayscale data across 3 distinct color channels(RGB) in the 
+                // physical file header to ensure compliance with the.hdr format
+                assert(m_imageBPP == 3);
+                m_imageBPP = 1; // Reset to 1 channel for our internal representation
+            } else {
+                NOT_IMPLEMENTED;
+            }
+        } else {
+            pImageData = stbi_load(m_fileName.c_str(), &m_imageWidth, &m_imageHeight, &m_imageBPP, 0);
+        }        
+    }
+
+    if (!pImageData) {
+        printf("Can't load texture from '%s' - %s\n", m_fileName.c_str(), stbi_failure_reason());
+        exit(0);
+    }
+
+    printf("Loaded texture '%s' width %d, height %d, bpp %d\n", m_fileName.c_str(), m_imageWidth, m_imageHeight, m_imageBPP);
+
+    LoadInternal(pImageData, IsSRGB);
+
+    // Free the image data after loading it into OpenGL
+    if (!m_isKTX) {
+        stbi_image_free(pImageData);
+    }
+        
+    return true;
+}
+
+
+void Texture::Load(const std::string& Filename, bool IsSRGB)
+{
+    m_fileName = Filename;
+
+    if (!Load(IsSRGB)) {
+        exit(0);
+    }
+}
+
+
+void Texture::LoadRaw(int Width, int Height, int BPP, const void* pImageData, bool IsSRGB)
+{
+    m_imageWidth = Width;
+    m_imageHeight = Height;
+    m_imageBPP = BPP;
+
+    LoadInternal(pImageData, IsSRGB);
+}
+
+
+void Texture::LoadInternal(const void* pImageData, bool IsSRGB)
+{
+    if (IsGLVersionHigher(4, 5)) {
+        LoadInternalDSA(pImageData, IsSRGB);
+    } else {
+        LoadInternalNonDSA(pImageData, IsSRGB);
+    }
+}
+
+
+void Texture::LoadInternalNonDSA(const void* pImageData, bool IsSRGB)
+{
+    glGenTextures(1, &m_textureObj);
+    glBindTexture(m_textureTarget, m_textureObj);
+
+    GLenum InternalFormat = GL_NONE;
+
+    if (m_textureTarget == GL_TEXTURE_2D) {
+        switch (m_imageBPP) {
+        case 1: {
+            glTexImage2D(m_textureTarget, 0, GL_RED, m_imageWidth, m_imageHeight, 0, GL_RED, GL_UNSIGNED_BYTE, pImageData);
+            GLint SwizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_RED };
+            glTexParameteriv(m_textureTarget, GL_TEXTURE_SWIZZLE_RGBA, SwizzleMask);
+            break;
+            }            
+
+        case 2:
+            glTexImage2D(m_textureTarget, 0, GL_RG, m_imageWidth, m_imageHeight, 0, GL_RG, GL_UNSIGNED_BYTE, pImageData);
+            break;
+
+        case 3:
+            InternalFormat = IsSRGB ? GL_SRGB8 : GL_RGB8;
+            glTexImage2D(m_textureTarget, 0, InternalFormat, m_imageWidth, m_imageHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, pImageData);
+            break;
+
+        case 4:
+            InternalFormat = IsSRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+            glTexImage2D(m_textureTarget, 0, InternalFormat, m_imageWidth, m_imageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, pImageData);
+            break;
+
+        default:
+            NOT_IMPLEMENTED;
+        }
+    } else {
+        printf("Support for texture target %x is not implemented\n", m_textureTarget);
+        exit(1);
+    }
+
+    if (pImageData) {
+        glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);        
+    } else {
+        glTexParameteri(m_textureTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    }
+
+    glTexParameteri(m_textureTarget, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_S, m_config.m_wrapMode);
+    glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_T, m_config.m_wrapMode);
+    //glTexParameteri(m_textureTarget, GL_TEXTURE_WRAP_R, m_config.m_wrapMode);
+
+    if (pImageData) {
+        glGenerateMipmap(m_textureTarget);
+    } else {
+        glTexParameteri(m_textureTarget, GL_TEXTURE_MAX_LEVEL, 0);
+    }
+
+    glBindTexture(m_textureTarget, 0);
+}
+
+void Texture::LoadInternalDSA(const void* pImageData, bool IsSRGB)
+{
+    glCreateTextures(m_textureTarget, 1, &m_textureObj);
+
+    int Levels = 1;
+    
+    if (m_config.m_genMipmaps) {
+        Levels = std::min(5, (int)log2f((float)std::max(m_imageWidth, m_imageHeight)));
+        Levels = std::max(1, Levels);   // must be 1 or greater else the GL call will fail
+    }    
+
+    GLenum InternalFormat = GL_NONE;
+    GLenum FormatType = m_config.m_isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE;
+
+    if (m_textureTarget == GL_TEXTURE_2D) {
+        if (m_isKTX) {
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+          //  int NumMipmaps = GetNumMipMapLevels2D(m_imageWidth, m_imageHeight);
+            glTextureStorage2D(m_textureObj, Levels, m_ktxFormat.Internal, m_imageWidth, m_imageHeight);
+            glTextureSubImage2D(m_textureObj, 0, 0, 0, m_imageWidth, m_imageHeight, m_ktxFormat.External, m_ktxFormat.Type, pImageData);
+        } else {
+            switch (m_imageBPP) {
+            case 1: {
+                InternalFormat = m_config.m_isFloat ? GL_R32F : GL_R8;
+                glTextureStorage2D(m_textureObj, Levels, InternalFormat, m_imageWidth, m_imageHeight);
+                glTextureSubImage2D(m_textureObj, 0, 0, 0, m_imageWidth, m_imageHeight, GL_RED, FormatType, pImageData);
+                GLint SwizzleMask[] = { GL_RED, GL_RED, GL_RED, GL_RED };
+                glTextureParameteriv(m_textureObj, GL_TEXTURE_SWIZZLE_RGBA, SwizzleMask);
+                break;
+                }
+
+            case 2:
+                glTextureStorage2D(m_textureObj, Levels, GL_RG8, m_imageWidth, m_imageHeight);
+                glTextureSubImage2D(m_textureObj, 0, 0, 0, m_imageWidth, m_imageHeight, GL_RG, FormatType, pImageData);
+                break;
+
+            case 3:
+                InternalFormat = IsSRGB ? GL_SRGB8 : GL_RGB8;
+                glTextureStorage2D(m_textureObj, Levels, InternalFormat, m_imageWidth, m_imageHeight);
+                glTextureSubImage2D(m_textureObj, 0, 0, 0, m_imageWidth, m_imageHeight, GL_RGB, FormatType, pImageData);
+                break;
+
+            case 4:
+                InternalFormat = IsSRGB ? GL_SRGB8_ALPHA8 : GL_RGBA8;
+                glTextureStorage2D(m_textureObj, Levels, InternalFormat, m_imageWidth, m_imageHeight);
+                glTextureSubImage2D(m_textureObj, 0, 0, 0, m_imageWidth, m_imageHeight, GL_RGBA, FormatType, pImageData);
+                break;
+
+            default:
+                NOT_IMPLEMENTED;
+            }
+        }
+    }
+    else {
+        printf("Support for texture target %x is not implemented\n", m_textureTarget);
+        exit(1);
+    }
+
+    glTextureParameteri(m_textureObj, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_BASE_LEVEL, 0);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_MAX_LEVEL, Levels - 1);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_WRAP_S, m_config.m_wrapMode);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_WRAP_T, m_config.m_wrapMode);
+
+    GLfloat MaxAnisotropy = 0.0f;
+    if (glewIsSupported("GL_ARB_texture_filter_anisotropic") || GL_VERSION_4_6) {
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &MaxAnisotropy);
+    }
+
+    glTextureParameteri(m_textureObj, GL_TEXTURE_MAX_ANISOTROPY, (GLint)MaxAnisotropy);
+
+    glGenerateTextureMipmap(m_textureObj);
+
+    m_bindlessHandle = glGetTextureHandleARB(m_textureObj);
+    glMakeTextureHandleResidentARB(m_bindlessHandle);
+}
+
+
+void Texture::LoadF32(int Width, int Height, const float* pImageData)
+{
+    if (!IsGLVersionHigher(4, 5)) {
+        OGLDEV_ERROR0("Non DSA version is not implemented\n");
+    }
+
+    m_imageWidth = Width;
+    m_imageHeight = Height;
+
+    glCreateTextures(m_textureTarget, 1, &m_textureObj);
+    glTextureStorage2D(m_textureObj, 1, GL_R32F, m_imageWidth, m_imageHeight);
+    glTextureSubImage2D(m_textureObj, 0, 0, 0, m_imageWidth, m_imageHeight, GL_RED, GL_FLOAT, pImageData);
+
+    glTextureParameteri(m_textureObj, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTextureParameterf(m_textureObj, GL_TEXTURE_BASE_LEVEL, 0);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_WRAP_S, m_config.m_wrapMode);
+    glTextureParameteri(m_textureObj, GL_TEXTURE_WRAP_T, m_config.m_wrapMode);
+}
+
+
+void Texture::Update(const void* pImageData)
+{
+    if (!IsGLVersionHigher(4, 5)) {
+        OGLDEV_ERROR0("Non DSA version is not implemented\n");
+    }
+
+    if (m_imageWidth <= 0 || m_imageHeight <= 0) {
+        OGLDEV_ERROR0("Image was not initialized\n");
+    }
+
+    if ((m_config.m_numChannels == 1) && (m_config.m_isFloat)) {
+        glTextureSubImage2D(m_textureObj, 0, 0, 0, m_imageWidth, m_imageHeight, GL_RED, GL_FLOAT, pImageData);
+        if (m_config.m_genMipmaps) {
+            glGenerateTextureMipmap(m_textureObj);
+        }
+    } else {
+        NOT_IMPLEMENTED;
+    }    
+}
+
+
+void Texture::Bind(GLenum TextureUnit)
+{
+    if (IsGLVersionHigher(4, 5)) {
+        BindInternalDSA(TextureUnit);
+    } else {
+        BindInternalNonDSA(TextureUnit);
+    }
+}
+
+
+void Texture::BindInternalNonDSA(GLenum TextureUnit)
+{
+    glActiveTexture(TextureUnit);
+    glBindTexture(m_textureTarget, m_textureObj);
+}
+
+
+void Texture::BindInternalDSA(GLenum TextureUnit)
+{
+    glBindTextureUnit(TextureUnit - GL_TEXTURE0, m_textureObj);
+}

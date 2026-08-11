@@ -100,39 +100,6 @@
     <ClCompile Include="triangle_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_util.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_basic_glfw_camera.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\math_3d.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\technique.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glfw.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_draw.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_impl_glfw.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_impl_opengl3.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_tables.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_widgets.cpp">
-      <Filter>3rdParty\ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="midpoint_disp_terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -142,29 +109,8 @@
     <ClCompile Include="texture_generator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_texture.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_tex_technique.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_stb_image.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="terrain_technique.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="stb_image.cpp">
-      <Filter>3rdParty\STB</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glfw_backend.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glm_camera.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\tools\OGL\Common\random_texture.cpp">
-      <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="slope_lighter.cpp">
       <Filter>Source Files</Filter>
@@ -177,6 +123,60 @@
     </ClCompile>
     <ClCompile Include="lod_manager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\math_3d.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_basic_glfw_camera.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_glfw.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_glfw_backend.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_glm_camera.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_stb_image.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_tex_technique.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_texture.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\ogldev_util.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\random_texture.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\technique.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_draw.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_tables.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_widgets.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\3rdparty\stb_image.cpp">
+      <Filter>3rdParty\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_impl_glfw.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\3rdparty\ImGui\GLFW\imgui_impl_opengl3.cpp">
+      <Filter>3rdParty\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
