@@ -63,6 +63,12 @@
     <None Include="Common\Shaders\skydome.vs">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="terrain.tcs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrain.tes">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="terrain_technique.h">
@@ -97,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="lod_manager.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="quad_list.h">
+      <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +198,9 @@
     </ClCompile>
     <ClCompile Include="Common\ogldev_skydome_technique.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="quad_list.cpp">
+      <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

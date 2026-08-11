@@ -24,7 +24,7 @@
 #include "ogldev_array_2d.h"
 #include "ogldev_texture.h"
 
-#include "geomip_grid.h"
+#include "quad_list.h"
 #include "terrain_technique.h"
 #include "ogldev_skydome.h"
 #include "texture_config.h"
@@ -32,9 +32,10 @@
 class BaseTerrain
 {
  public:
-    BaseTerrain() {}
+    BaseTerrain() : m_heightMapTexture(GL_TEXTURE_2D) {}
 
     ~BaseTerrain();
+
 
     void Destroy();
 
@@ -46,8 +47,8 @@ class BaseTerrain
         }
 
         if (TextureFilenames.size() != ARRAY_SIZE_IN_ELEMENTS(m_pTextures)) {
-            printf("%s:%d - number of provided textures (%d) is not equal to the size of the texture array (%d)\n",
-                __FILE__, __LINE__, (int)TextureFilenames.size(), (int)ARRAY_SIZE_IN_ELEMENTS(m_pTextures));
+            printf("%s:%d - number of provided textures (%lud) is not equal to the size of the texture array (%lud)\n",
+                __FILE__, __LINE__, (unsigned long)TextureFilenames.size(), (unsigned long)ARRAY_SIZE_IN_ELEMENTS(m_pTextures));
             exit(0);
         }
 
@@ -59,10 +60,8 @@ class BaseTerrain
             m_pTextures[i]->Load(TextureFilenames[i]);
         }
 
-
         m_pSkydome = new Skydome(8, 32, 1.0f, "assets/textures/143_hdrmaps_com_free_10K.jpg", COLOR_TEXTURE_UNIT_0, COLOR_TEXTURE_UNIT_INDEX_0);
     }
-
 
     void Render(const BasicCamera& Camera);
 
@@ -88,34 +87,39 @@ class BaseTerrain
 
     float GetMaxHeight() const { return m_maxHeight; }
 
-    float GetWorldSize() const { return m_terrainSize * m_worldScale; }
-
+    float GetWorldSize() const { return m_numPatches * m_worldScale; }
+   // float GetWorldHeight(float x, float z) const
+    
     Vector3f ConstrainCameraPosToTerrain(const Vector3f& CameraPos);
 
- protected:
 
+    float GetHeightMapWorldSize() const;
+
+    float GetWorldHeight(float x, float z) const;
+
+ protected:
+	 friend class MidpointDispTerrain;
 	void LoadHeightMapFile(const char* pFilename);
 
     void SetMinMaxHeight(float MinHeight, float MaxHeight);
 
     void Finalize();    
 
-    float GetWorldHeight(float x, float z) const;
-
+    float m_cameraHeight = 5.0f;
     int m_terrainSize = 0;
-    int m_patchSize = 0;
+    int m_numPatches = 0;
 	float m_worldScale = 1.0f;
     Array2D<float> m_heightMap;
-    Texture* m_pTextures[4] = { 0 };
-    float m_textureScale = 1.0f;
 
 private:
-    GeomipGrid m_geomipGrid;
+    float m_textureScale = 1.0f;
+    Texture* m_pTextures[4] = { 0 };
+    Texture m_heightMapTexture;
+    QuadList m_quadList;
     float m_minHeight = 0.0f;
     float m_maxHeight = 0.0f;
     TerrainTechnique m_terrainTech;
     Vector3f m_lightDir;
-    float m_cameraHeight = 2.0f;
     Skydome* m_pSkydome = NULL;
 };
 

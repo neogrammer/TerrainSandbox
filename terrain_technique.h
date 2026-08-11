@@ -31,10 +31,9 @@ public:
 
     void SetVP(const Matrix4f& VP);
 
-    void SetMinMaxHeight(float Min, float Max)
+    void SetViewMatrix(const Matrix4f& View)
     {
-        glUniform1f(m_minHeightLoc, Min);
-        glUniform1f(m_maxHeightLoc, Max);
+        glUniformMatrix4fv(m_ViewLoc, 1, GL_TRUE, (const GLfloat*)View.m);
     }
 
 
@@ -44,8 +43,7 @@ public:
 	
 private:
     GLuint m_VPLoc = -1;
-    GLuint m_minHeightLoc = -1;
-    GLuint m_maxHeightLoc = -1;
+    GLuint m_ViewLoc = -1;
     GLuint m_tex0HeightLoc = -1;
     GLuint m_tex1HeightLoc = -1;
     GLuint m_tex2HeightLoc = -1;
@@ -55,6 +53,7 @@ private:
     GLuint m_tex2UnitLoc = -1;
     GLuint m_tex3UnitLoc = -1;
     GLuint m_reversedLightDirLoc = -1;
+    GLuint m_heightMapLoc = -1;
 };
 
 #endif  /* TERRAIN_TECHNIQUE_H */

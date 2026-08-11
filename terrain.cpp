@@ -38,17 +38,20 @@ BaseTerrain::~BaseTerrain()
 void BaseTerrain::Destroy()
 {
     m_heightMap.Destroy();
-    m_geomipGrid.Destroy();
+    m_quadList.Destroy();
 }
 
 
 
-//void BaseTerrain::InitTerrain(float WorldScale, float TextureScale, const std::vector<string>& TextureFilenames)
 
 
 void BaseTerrain::Finalize()
 {
-    m_geomipGrid.CreateGeomipGrid(m_terrainSize, m_terrainSize, m_patchSize, this);
+    m_quadList.CreateQuadList(m_numPatches, m_numPatches, this);
+
+  //  m_heightMap.PrintFloat();
+
+    m_heightMapTexture.LoadF32(m_terrainSize, m_terrainSize, m_heightMap.GetBaseAddr());
 }
 
 
@@ -84,7 +87,7 @@ void BaseTerrain::LoadFromFile(const char* pFilename)
     // how do we know the patch size at this point?
     assert(0);
 
-    m_geomipGrid.CreateGeomipGrid(m_terrainSize, m_terrainSize, m_patchSize, this);
+    m_quadList.CreateQuadList(m_numPatches, m_numPatches, this);
 }
 
 
@@ -136,6 +139,7 @@ void BaseTerrain::Render(const BasicCamera& Camera)
     Matrix4f View = Camera.GetMatrix();
 
     m_terrainTech.Enable();
+    m_terrainTech.SetViewMatrix(View);
     m_terrainTech.SetVP(VP);
 
     for (int i = 0; i < ARRAY_SIZE_IN_ELEMENTS(m_pTextures); i++) {
@@ -143,11 +147,15 @@ void BaseTerrain::Render(const BasicCamera& Camera)
             m_pTextures[i]->Bind(COLOR_TEXTURE_UNIT_0 + i);
         }
     }
+
+    m_heightMapTexture.Bind(HEIGHT_MAP_TEXTURE_UNIT);
 	
     m_terrainTech.SetLightDir(m_lightDir);
 
-    m_geomipGrid.Render(Camera.GetPos(), VP);
+    glFrontFace(GL_CCW);
+    m_quadList.Render();
 
+    glFrontFace(GL_CW); // hack....
     m_pSkydome->Render(Camera);
 }
 
@@ -158,7 +166,6 @@ void BaseTerrain::SetMinMaxHeight(float MinHeight, float MaxHeight)
     m_maxHeight = MaxHeight;
 
     m_terrainTech.Enable();
-    m_terrainTech.SetMinMaxHeight(MinHeight, MaxHeight);
 }
 
 
@@ -168,41 +175,94 @@ void BaseTerrain::SetTextureHeights(float Tex0Height, float Tex1Height, float Te
 }
 
 
+//float BaseTerrain::GetWorldHeight(float x, float z) const
+//{
+//    //float HeightMapX = x / m_worldScale;
+//    //float HeightMapZ = z / m_worldScale;
+//
+//    //return GetHeightInterpolated(HeightMapX, HeightMapZ);
+//
+//    //{
+//        // Convert world coords to heightmap coords [0, terrainSize-1]
+//        // worldSize = (terrainSize-1) * worldScale
+//        float heightMapSize = (float)(m_terrainSize - 1);
+//        float worldSize = heightMapSize * m_worldScale;
+//
+//        float HeightMapX = (x / worldSize) * heightMapSize;
+//        float HeightMapZ = (z / worldSize) * heightMapSize;
+//
+//        // Clamp
+//        HeightMapX = std::max(0.0f, std::min(HeightMapX, heightMapSize));
+//        HeightMapZ = std::max(0.0f, std::min(HeightMapZ, heightMapSize));
+//
+//        return GetHeightInterpolated(HeightMapX, HeightMapZ);
+//    }
+//
+//
+//
+//
+//Vector3f BaseTerrain::ConstrainCameraPosToTerrain(const Vector3f& CameraPos)
+//{
+//    Vector3f NewCameraPos = CameraPos;
+//
+//    float actualWorldSize = (float)(m_terrainSize - 1) * m_worldScale;
+//
+//    NewCameraPos.x = std::max(0.0f, std::min(CameraPos.x, actualWorldSize));
+//    NewCameraPos.z = std::max(0.0f, std::min(CameraPos.z, actualWorldSize));
+//
+//    NewCameraPos.y = GetWorldHeight(NewCameraPos.x, NewCameraPos.z) + m_cameraHeight;
+//
+//    float f = sinf(NewCameraPos.x * 4.0f) + cosf(NewCameraPos.z * 4.0f);
+//    f /= 35.0f;
+//    NewCameraPos.y += f;
+//
+//    return NewCameraPos;
+//}
+
+
+
+// NEW: Get the actual world span of the heightmap
+float BaseTerrain::GetHeightMapWorldSize() const
+{
+    return (float)(m_terrainSize - 1) * m_worldScale;
+}
+
 float BaseTerrain::GetWorldHeight(float x, float z) const
 {
-    float HeightMapX = x / m_worldScale;
-    float HeightMapZ = z / m_worldScale;
+    // The world is m_numPatches * m_worldScale units wide
+    // The heightmap is m_terrainSize x m_terrainSize points
+    // We need to map world coords to heightmap coords
+
+    float worldSize = GetWorldSize();
+
+    // Map world position [0, worldSize] to heightmap index [0, terrainSize-1]
+    float HeightMapX = (x / worldSize) * (float)(m_terrainSize - 1);
+    float HeightMapZ = (z / worldSize) * (float)(m_terrainSize - 1);
+
+    // Clamp
+    if (HeightMapX < 0.0f) HeightMapX = 0.0f;
+    if (HeightMapZ < 0.0f) HeightMapZ = 0.0f;
+    if (HeightMapX > (float)(m_terrainSize - 1)) HeightMapX = (float)(m_terrainSize - 1);
+    if (HeightMapZ > (float)(m_terrainSize - 1)) HeightMapZ = (float)(m_terrainSize - 1);
 
     return GetHeightInterpolated(HeightMapX, HeightMapZ);
 }
 
-
 Vector3f BaseTerrain::ConstrainCameraPosToTerrain(const Vector3f& CameraPos)
 {
     Vector3f NewCameraPos = CameraPos;
+    float worldSize = GetWorldSize();  // 2048
 
-    // Make sure camera doesn't go outside of the terrain bounds
-    if (CameraPos.x < 0.0f) {
-        NewCameraPos.x = 0.0f;
-    }
+    // Clamp to the rendered world
+    if (NewCameraPos.x < 0.0f) NewCameraPos.x = 0.0f;
+    if (NewCameraPos.z < 0.0f) NewCameraPos.z = 0.0f;
+    if (NewCameraPos.x > worldSize) NewCameraPos.x = worldSize;
+    if (NewCameraPos.z > worldSize) NewCameraPos.z = worldSize;
 
-    if (CameraPos.z < 0.0f) {
-        NewCameraPos.z = 0.0f;
-    }
+    NewCameraPos.y = GetWorldHeight(NewCameraPos.x, NewCameraPos.z) + m_cameraHeight;
 
-    if (CameraPos.x >= GetWorldSize()) {
-        NewCameraPos.x = GetWorldSize() - 0.5f;
-    }
-
-    if (CameraPos.z >= GetWorldSize()) {
-        NewCameraPos.z = GetWorldSize() - 0.5f;
-    }
-
-    NewCameraPos.y = GetWorldHeight(CameraPos.x, CameraPos.z) + m_cameraHeight;
-
-    float f = sinf(CameraPos.x * 4.0f) + cosf(CameraPos.z * 4.0f);    
-    f /= 35.0f; 
-
+    float f = sinf(NewCameraPos.x * 4.0f) + cosf(NewCameraPos.z * 4.0f);
+    f /= 35.0f;
     NewCameraPos.y += f;
 
     return NewCameraPos;

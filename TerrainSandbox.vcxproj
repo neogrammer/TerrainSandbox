@@ -165,6 +165,14 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
     </None>
+    <None Include="terrain.tcs">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
+    <None Include="terrain.tes">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </None>
     <None Include="terrain.vs">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
@@ -193,6 +201,7 @@
     <ClInclude Include="geomip_grid.h" />
     <ClInclude Include="lod_manager.h" />
     <ClInclude Include="midpoint_disp_terrain.h" />
+    <ClInclude Include="quad_list.h" />
     <ClInclude Include="single_tex_terrain_technique.h" />
     <ClInclude Include="slope_lighter.h" />
     <ClInclude Include="terrain.h" />
@@ -225,6 +234,7 @@
     <ClCompile Include="geomip_grid.cpp" />
     <ClCompile Include="lod_manager.cpp" />
     <ClCompile Include="midpoint_disp_terrain.cpp" />
+    <ClCompile Include="quad_list.cpp" />
     <ClCompile Include="single_tex_terrain_technique.cpp" />
     <ClCompile Include="slope_lighter.cpp" />
     <ClCompile Include="terrain.cpp" />
