@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{27b332ca-eaca-4e08-8703-461a01804eb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty">
+      <UniqueIdentifier>{20cc8411-7a4b-4d0a-becc-df4936d9be13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\ImGui">
+      <UniqueIdentifier>{ffa3e2c3-3675-4e21-81bf-4d84f0115ffe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\STB">
+      <UniqueIdentifier>{b57e95a4-86da-49c1-bd55-37ead1f4dc07}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="terrain_fault.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrain_fault.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="single_tex_terrain.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="single_tex_terrain.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrain.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrain.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrain_lit.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrain_lit.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrainLOD.fs">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="terrainLOD.vs">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="terrain_technique.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="triangle_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="midpoint_disp_terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="single_tex_terrain_technique.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_generator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="slope_lighter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="geomip_grid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="demo_config.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lod_manager.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="terrain_demo1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="triangle_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_util.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_basic_glfw_camera.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\math_3d.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\technique.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glfw.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_draw.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_impl_glfw.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_impl_opengl3.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_tables.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\3rdparty\ImGui\GLFW\imgui_widgets.cpp">
+      <Filter>3rdParty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="midpoint_disp_terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="single_tex_terrain_technique.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_generator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_texture.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_tex_technique.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_stb_image.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain_technique.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.cpp">
+      <Filter>3rdParty\STB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glfw_backend.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\ogldev_glm_camera.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\tools\OGL\Common\random_texture.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="slope_lighter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="terrain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="geomip_grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lod_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\textures\IMGP5487_seamless.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\IMGP5525_seamless.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\tilable-IMG_0044-verydark.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\water.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\rock01.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\textures\rock02_2.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

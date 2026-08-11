@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="TerrainSandbox.vcxproj" Id="815d10de-ebba-4b3f-9dd0-c502ecb226fe" />
+</Solution>
